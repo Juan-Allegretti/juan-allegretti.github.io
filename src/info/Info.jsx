@@ -1,4 +1,4 @@
-import self from "../img/self.png";
+import self from "../img/self.jpg";
 
 // export let colors = ["rgb(0,255,255)", "rgb(166,104,255)"];
 export let colors = ["rgb(0,255,255)", "rgb(50,104,255)"];
