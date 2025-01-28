@@ -173,7 +173,8 @@ const Terminal = () => {
               ]);
               setTimeout(() => {
                 window.location.href = "#/gui";
-              }, 2000);   
+              }, 2000);
+              break;
             case "sudo":
               setTerminalOutput([
                 ...terminalOutput,
