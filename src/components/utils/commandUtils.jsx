@@ -1,11 +1,17 @@
 import {
   functionCommandsList,
   printCommandsList,
+  printTextHiddenCommandsList,
   redirectCommands,
 } from "../commands/Commands";
 
 export function isPrintCommand(command) {
-  return printCommandsList.includes(command);
+  /**
+   * Check if the command is a print command
+   * @param {string} command
+   * @returns {boolean}
+   */
+  return printCommandsList.includes(command) || printTextHiddenCommandsList.includes(command);
 }
 
 export function isFunctionCommand(command) {

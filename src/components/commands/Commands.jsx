@@ -105,6 +105,18 @@ export const textCommands = {
   }
 };
 
+export const hiddenTextCommands = {
+  cli: {
+    title: "CLI",
+    texts: [
+      `You are already using the CLI. If you want to switch to GUI mode, type the command <span class="command">gui</span>.`,
+      ``,
+    ],
+  },
+};
+
+export const printTextHiddenCommandsList = [...Object.keys(hiddenTextCommands)];
+
 export const printCommandsList = [...Object.keys(textCommands), "all"];
 
-export const functionCommandsList = ["clear", "gui"];
+export const functionCommandsList = ["clear", "gui", "sudo"];

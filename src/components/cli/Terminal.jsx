@@ -7,6 +7,7 @@ import About from "../commands/About";
 import Social from "../commands/Social";
 import Banner from "../commands/Banner";
 import Projects from "../commands/Projects";
+import Cli from "../commands/Cli";
 import AllCommands from "../commands/AllCommands";
 import CommandError from "../commands/CommandError";
 import WelcomeMsg from "./WelcomeMsg";
@@ -42,6 +43,7 @@ const Terminal = () => {
     banner: <Banner />,
     all: <AllCommands />,
     projects: <Projects />,
+    cli: <Cli />,
   };
 
   React.useEffect(() => {
@@ -171,7 +173,18 @@ const Terminal = () => {
               ]);
               setTimeout(() => {
                 window.location.href = "#/gui";
-              }, 2000);              
+              }, 2000);   
+            case "sudo":
+              setTerminalOutput([
+                ...terminalOutput,
+                commandRecord,
+                <span style={{ color: "red" }}>Permission denied... </span>,
+              ]);
+              setTimeout(() => {
+                // Rickroll!
+                window.open("https://youtu.be/dQw4w9WgXcQ", "_blank");
+              }, 2000); 
+              break;           
           }
         }
     }
