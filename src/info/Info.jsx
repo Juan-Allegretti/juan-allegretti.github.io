@@ -48,11 +48,6 @@ export const info = {
       label: "linkedin",
     },
     {
-      link: "https://twitter.com/juanallegretti",
-      icon: "fab fa-twitter",
-      label: "twitter",
-    },
-    {
       link: "https://www.x.com/juanallegretti",
       icon: "fa-brands fa-x-twitter",
       label: "x",

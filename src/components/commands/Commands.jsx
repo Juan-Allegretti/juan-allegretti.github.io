@@ -63,7 +63,6 @@ export const textCommands = {
       `Here are my social media profiles. Feel free to follow me! You can type the command or click on the link.`,
       ``,
       `   <span class="command">linkedin</span>     <a href="${redirectCommands.linkedin.url}">@Juan-Allegretti</a>`,
-      `   <span class="command">twitter</span>      <a href="${redirectCommands.twitter.url}">@JuanAllegretti</a>`,
       `   <span class="command">x</span>            <a href="${redirectCommands.x.url}">@JuanAllegretti</a>`,
       `   <span class="command">instagram</span>    <a href="${redirectCommands.instagram.url}">@Juan.Aallegretti</a>`,
       `   <span class="command">threads</span>      <a href="${redirectCommands.threads.url}">@Juan.Allegretti</a>`,
