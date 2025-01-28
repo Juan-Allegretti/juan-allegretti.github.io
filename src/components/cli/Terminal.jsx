@@ -155,7 +155,7 @@ const Terminal = () => {
             ]);
             setTimeout(() => {
               rickRoll();
-            }, 5000);
+            }, 2000);
           } else {
             setTerminalOutput([
               ...terminalOutput,
