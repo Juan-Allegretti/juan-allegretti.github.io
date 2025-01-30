@@ -4,7 +4,7 @@ import { textCommands } from "./Commands";
 
 const InputNotAllowed = ( { message } ) => {
 
-  const messages = [message, ``];
+  const messages = [message];
 
   return (
     <div>
