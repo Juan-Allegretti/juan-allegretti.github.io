@@ -3,6 +3,7 @@ import {
   printCommandsList,
   printTextHiddenCommandsList,
   redirectCommands,
+  inputNotAllowedPatterns,
 } from "../commands/Commands";
 
 export function isPrintCommand(command) {
@@ -11,7 +12,10 @@ export function isPrintCommand(command) {
    * @param {string} command
    * @returns {boolean}
    */
-  return printCommandsList.includes(command) || printTextHiddenCommandsList.includes(command);
+  return (
+    printCommandsList.includes(command) ||
+    printTextHiddenCommandsList.includes(command)
+  );
 }
 
 export function isFunctionCommand(command) {
@@ -38,4 +42,22 @@ export function autocompleteCommand(command) {
   ];
   const matchedCommands = validCommands.filter((c) => c.startsWith(command));
   return matchedCommands;
+}
+
+export function isNotAllowedInput(input) {
+  return inputNotAllowedPatterns.some((pattern) => pattern.pattern.test(input));
+}
+
+export function getNotAllowedInputMessage(input) {
+  const pattern = inputNotAllowedPatterns.find((pattern) =>
+    pattern.pattern.test(input)
+  );
+  return pattern.message;
+}
+
+export function getNotAllowedInputAction(input) {
+  const pattern = inputNotAllowedPatterns.find((pattern) =>
+    pattern.pattern.test(input)
+  );
+  return pattern.action;
 }

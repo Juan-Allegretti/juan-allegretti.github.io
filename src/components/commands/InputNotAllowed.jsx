@@ -1,9 +1,10 @@
 import React from "react";
 import Typewriter from "typewriter-effect";
-import { hiddenTextCommands } from "./Commands";
+import { textCommands } from "./Commands";
 
-const Sudo = () => {
-  const sudoTexts = hiddenTextCommands.sudo.texts;
+const InputNotAllowed = ( { message } ) => {
+
+  const messages = [message, ``];
 
   return (
     <div>
@@ -12,9 +13,9 @@ const Sudo = () => {
         onInit={(typewriter) => {
           typewriter.changeDelay(1);
 
-          for (let i = 0; i < sudoTexts.length; i++) {
-            typewriter.typeString(sudoTexts[i]);
-            if (i < sudoTexts.length - 1) {
+          for (let i = 0; i < messages.length; i++) {
+            typewriter.typeString(messages[i]);
+            if (i < messages.length - 1) {
               typewriter.typeString("<br />");
             }
           }
@@ -25,4 +26,4 @@ const Sudo = () => {
   );
 };
 
-export default Sudo;
+export default InputNotAllowed;

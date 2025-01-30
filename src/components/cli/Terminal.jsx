@@ -11,20 +11,22 @@ import Cli from "../commands/Cli";
 import AllCommands from "../commands/AllCommands";
 import CommandError from "../commands/CommandError";
 import WelcomeMsg from "./WelcomeMsg";
+import InputNotAllowed from "../commands/InputNotAllowed";
 import {
   isValidCommand,
   isPrintCommand,
   isFunctionCommand,
   isRedirectCommand,
   autocompleteCommand,
+  isNotAllowedInput,
+  getNotAllowedInputAction,
+  getNotAllowedInputMessage,
 } from "../utils/commandUtils";
-import { 
-  isAttackCommand,
-  handleAttackCommands
-} from "../utils/secUtils"
+
 import { rickRoll } from "../utils/miscUtils";
 import { textCommands, redirectCommands } from "../commands/Commands";
 import "./cli.css";
+import { _ } from "ajv";
 
 const Terminal = () => {
   const inputText = React.useRef();
@@ -147,15 +149,28 @@ const Terminal = () => {
         }
         setHistoryCommands([...historyCommands, value]);
         if (!isValidCommand(value)) {
-          if (isAttackCommand(value)){
-            setTerminalOutput([
-              ...terminalOutput,
-              commandRecord,
-              handleAttackCommands(value)
-            ]);
-            setTimeout(() => {
-              rickRoll();
-            }, 2000);
+          if (isNotAllowedInput(value)) {
+            switch (getNotAllowedInputAction(value)) {
+              case "rickroll":
+                setTerminalOutput([
+                  ...terminalOutput,
+                  commandRecord,
+                  getNotAllowedInputMessage(value),
+                ]);
+                setTimeout(() => {
+                  rickRoll();
+                }, 2000);
+                break;
+              case null:
+                setTerminalOutput([
+                  ...terminalOutput,
+                  commandRecord,
+                  <InputNotAllowed
+                    message={getNotAllowedInputMessage(value)}
+                  />,
+                ]);
+                break;
+            }
           } else {
             setTerminalOutput([
               ...terminalOutput,
@@ -188,16 +203,6 @@ const Terminal = () => {
               ]);
               setTimeout(() => {
                 window.location.href = "#/gui";
-              }, 2000);
-              break;
-            case "sudo":
-              setTerminalOutput([
-                ...terminalOutput,
-                commandRecord,
-                <span style={{ color: "red" }}>Permission denied... </span>,
-              ]);
-              setTimeout(() => {
-                rickRoll();
               }, 2000);
               break;
           }
