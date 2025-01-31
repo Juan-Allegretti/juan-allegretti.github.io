@@ -1,6 +1,7 @@
 import React from "react";
 import MapConsoleOutput from "./MapConsoleOutput";
 import Prompt from "./Prompt";
+import PasswordPrompt from "./PasswordPrompt";
 import Contact from "../commands/Contact";
 import Help from "../commands/Help";
 import About from "../commands/About";
@@ -11,6 +12,7 @@ import Cli from "../commands/Cli";
 import AllCommands from "../commands/AllCommands";
 import CommandError from "../commands/CommandError";
 import WelcomeMsg from "./WelcomeMsg";
+import InputNotAllowedTypewriter from "../commands/InputNotAllowedTYpewriter";
 import InputNotAllowed from "../commands/InputNotAllowed";
 import {
   isValidCommand,
@@ -24,9 +26,11 @@ import {
 } from "../utils/commandUtils";
 
 import { rickRoll } from "../utils/miscUtils";
+import { hashText } from "../utils/textUtils";
 import { textCommands, redirectCommands } from "../commands/Commands";
 import "./cli.css";
 import { _ } from "ajv";
+import SuRoot from "../commands/SuRoot";
 
 const Terminal = () => {
   const inputText = React.useRef();
@@ -34,6 +38,8 @@ const Terminal = () => {
 
   const [input, setInput] = React.useState("");
   const [terminalOutput, setTerminalOutput] = React.useState([]);
+
+  const [isAwaitingPassword, setIsAwaitingPassword] = React.useState(false);
 
   const [historyCommands, setHistoryCommands] = React.useState([]);
   const [historyCommandsPosition, setHistoryComandsPosition] =
@@ -49,8 +55,10 @@ const Terminal = () => {
     banner: <Banner />,
     all: <AllCommands />,
     projects: <Projects />,
-    cli: <Cli />,
+    cli: <Cli />
   };
+
+  const secret = "0cb42a8d3bffd99356dacb0838465321548d0172a6b8113dcbbd471a94638d9f";
 
   React.useEffect(() => {
     inputText.current.focus();
@@ -94,8 +102,9 @@ const Terminal = () => {
         className="terminal-command-record"
       >
         <span className="terminal-prompt">
-          <Prompt />
+          {isAwaitingPassword ? <PasswordPrompt /> : <Prompt />}
         </span>
+        {!isAwaitingPassword ? value : ""} 
       </div>
     );
 
@@ -110,6 +119,28 @@ const Terminal = () => {
         window.open(p.url, "_blank");
       }, 1000);
     };
+
+    if (isAwaitingPassword) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        if ( hashText(value) === secret) {
+          setTerminalOutput([
+            ...terminalOutput,
+            commandRecord,
+            <SuRoot />,
+          ]);
+        } else {
+          setTerminalOutput([
+            ...terminalOutput,
+            commandRecord,
+            "Sorry! Wrong password.",
+          ]);
+        }
+        setIsAwaitingPassword(false);
+        setInput("");
+      }
+      return;
+    }
 
     switch (e.key) {
       case "Tab":
@@ -155,7 +186,7 @@ const Terminal = () => {
                 setTerminalOutput([
                   ...terminalOutput,
                   commandRecord,
-                  getNotAllowedInputMessage(value),
+                  <InputNotAllowed message={getNotAllowedInputMessage(value)} />,
                 ]);
                 setTimeout(() => {
                   rickRoll();
@@ -165,7 +196,7 @@ const Terminal = () => {
                 setTerminalOutput([
                   ...terminalOutput,
                   commandRecord,
-                  <InputNotAllowed
+                  <InputNotAllowedTypewriter
                     message={getNotAllowedInputMessage(value)}
                   />,
                 ]);
@@ -205,6 +236,13 @@ const Terminal = () => {
                 window.location.href = "#/gui";
               }, 2000);
               break;
+            case "su root":
+              setTerminalOutput([
+                ...terminalOutput,
+                commandRecord,
+              ]);
+              setIsAwaitingPassword(true);
+              break;
           }
         }
     }
@@ -223,9 +261,9 @@ const Terminal = () => {
         <WelcomeMsg />
         <MapConsoleOutput consoleOutput={terminalOutput} />
         <div className="terminal-input-area">
-          <Prompt />
+        {isAwaitingPassword ? <PasswordPrompt /> : <Prompt />}
           <input
-            type="text"
+            type={isAwaitingPassword ? "password" : "text"} // Set to "password" when awaiting password
             ref={inputText}
             className="terminal-input"
             value={input}

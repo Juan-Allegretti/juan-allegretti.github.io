@@ -110,7 +110,6 @@ export const hiddenTextCommands = {
     title: "CLI",
     texts: [
       `You are already using the CLI. If you want to switch to GUI mode, type the command <span class="command">gui</span>.`,
-      ``,
     ],
   },
 };
@@ -119,7 +118,10 @@ export const inputNotAllowedPatterns = [
   {
     name: "sudo",
     pattern: /^sudo\s|^sudo$/,
-    message: "Permission denied...",
+    message: `
+<span class="terminal-error">Permission denied.</span>
+You can't use sudo here! I'm the only superuser. Please <span class="command">contact</span> the administator.
+    `,
     action: "rickroll",
   },
   {
@@ -249,10 +251,10 @@ export const inputNotAllowedPatterns = [
     action: null,
   },
   {
-    name: "su root",
-    pattern: /^su root$/,
-    message: "Root access denied. Go hack something else!",
-      action: "rickroll",
+    name: "su",
+    pattern: /^su\s|^su$/,
+    message: "User not found. Try switching another user!",
+    action: null,
   },
   {
     name: "scp",
@@ -295,7 +297,7 @@ export const inputNotAllowedPatterns = [
     name: "XSS",
     pattern: /<script.*?>|<img.*?src=.*?onerror=.*?>|<iframe.*?>|javascript:.*?|on\w+=.*?|alert\(.*?\)|document\.cookie|eval\(.*?\)/,
     message: `
-XSS Detected!
+<span class="terminal-error">XSS Detected!</span>
 
 Nice try, hacker! But you can't cross-site script me!
 Remember I'm a cybersecurity engineer!
@@ -310,7 +312,7 @@ Sorry, but now I have to rickroll you...
     name: "SQLi",
     pattern: /'.*?(OR|AND).*?('|"|`).*?=.*?('|"|`)|".*?(OR|AND).*?('|"|`).*?=.*?('|"|`)|;.*?(DROP|DELETE|UPDATE|INSERT|SELECT).*?|UNION.*?SELECT.*?|--.*?|\/\*.*?\*\/|\bOR\s+1=1\b|\bAND\s+1=1\b|'?\s+(OR|AND)\s+['"]?.*?=.*?['"]?|'?\s+(OR|AND)\s+1=1\s*;?\s*--|"?\\s+(OR|AND)\\s+1=1\\s*;?\\s*--|\bEXEC(\s+|\()|\bINTO\s+OUTFILE\b|\bLOAD_FILE\s*\(|\bSELECT\s+.*\bFROM\b.*?\bWHERE\b.*?\b=\b.*?\s*;|'?\s+(OR|AND)\s+\d+=\d+|\b(SLEEP|BENCHMARK)\b\s*\(|\bWAITFOR\s+DELAY\b|\bHAVING\s+.*\b=.*?\b/,
     message: `
-SQL Injection Detected!
+<span class="terminal-error">SQL Injection Detected!</span>
 
 Oh no you don't! No database here for you to inject SQL into. And if there was, I'd be prepared!
 
@@ -323,22 +325,34 @@ action: "rickroll",
       name: "HTMLi",
       pattern: /<div.*?>|<h1.*?>|<h2.*?>|<h3.*?>|<h4.*?>|<h5.*?>|<h6.*?>|<p.*?>|<a.*?>|<span.*?>|<.*?>/,
       message: `
-  HTML injection detected!
-  
-  Nice try, but you can't insert HTML here. Remember I'm a cybersecurity engineer!
-  Try another type of vulnerability.
-  
-  Sorry, but now I have to rickroll you...
-      
-      `,
+<span class="terminal-error">HTML Injection Detected!</span>
+
+Nice try, but you can't insert HTML here. Remember I'm a cybersecurity engineer!
+Try another type of vulnerability.
+
+Sorry, but now I have to rickroll you...
+    
+    `,
       action: "rickroll",
     }
 ]
+
+export const secretCommands = {
+  su_root: {
+    title: "su root",
+    texts: [
+      `Successfully switched to root user. Now you can use hidden commands:`,
+      ``,
+      `  <span class="command">sudo</span>        Gain root privileges`,
+      ``,
+    ]
+  }
+}
 
 
 export const printTextHiddenCommandsList = [...Object.keys(hiddenTextCommands)];
 
 export const printCommandsList = [...Object.keys(textCommands), "all"];
 
-export const functionCommandsList = ["clear", "gui"];
+export const functionCommandsList = ["clear", "gui", "su root"];
 
