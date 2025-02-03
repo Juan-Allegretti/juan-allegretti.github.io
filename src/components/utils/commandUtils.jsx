@@ -4,6 +4,7 @@ import {
   printTextHiddenCommandsList,
   redirectCommands,
   inputNotAllowedPatterns,
+  inputAllowedPatterns,
 } from "../commands/Commands";
 
 export function isPrintCommand(command) {
@@ -57,6 +58,24 @@ export function getNotAllowedInputMessage(input) {
 
 export function getNotAllowedInputAction(input) {
   const pattern = inputNotAllowedPatterns.find((pattern) =>
+    pattern.pattern.test(input)
+  );
+  return pattern.action;
+}
+
+export function isAllowedInput(input) {
+  return inputAllowedPatterns.some((pattern) => pattern.pattern.test(input));
+}
+
+export function getAllowedInputMessage(input) {
+  const pattern = inputAllowedPatterns.find((pattern) =>
+    pattern.pattern.test(input)
+  );
+  return pattern.message;
+}
+
+export function getAllowedInputAction(input) {
+  const pattern = inputAllowedPatterns.find((pattern) =>
     pattern.pattern.test(input)
   );
   return pattern.action;

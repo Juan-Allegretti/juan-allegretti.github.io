@@ -4,9 +4,9 @@ import React from "react";
 const Prompt = () => (
   <div>
     <span class="terminal-prompt-arrow">➜</span>
-    <span class="terminal-prompt-arrow">&nbsp;anon</span>
+    <span class="terminal-prompt-arrow">&nbsp;guest</span>
     <span class="terminal-prompt-text">
-      @juanallegretti.com
+      @juanallegretti.dev.ar
       <span class="terminal-prompt-home">&nbsp;~</span>&nbsp;
     </span>
   </div>

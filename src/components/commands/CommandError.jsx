@@ -3,7 +3,7 @@ import Typewriter from "typewriter-effect";
 
 const CommandError = ({ commandName }) => {
   const errorTexts = [
-    `<span class='terminal-error'>command not found: ${commandName}.</span>`,
+    `<span class='terminal-error'>command not found: ${commandName}</span>`,
     `Type <span class='command'>help</span> to see the available commands.`,
   ];
 

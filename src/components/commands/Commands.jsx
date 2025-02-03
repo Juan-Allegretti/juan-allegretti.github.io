@@ -85,6 +85,8 @@ export const textCommands = {
       `   <span class="command">all</span>            Display all the commands`,
       `   <span class="command">banner</span>         Display the banner`,
       `   <span class="command">gui</span>            Switch to GUI mode`,
+      `   <span class="command">exit</span>           Close the terminal`,
+      `   <span class="command">su root</span>        Switch to root user`,
       ``,
     ],
   },
@@ -125,12 +127,6 @@ You can't use sudo here! I'm the only superuser. Please <span class="command">co
     action: "rickroll",
   },
   {
-    name: "ls",
-    pattern: /^ls\s|^ls$/,
-    message: "There's nothing to list here. No files, no directories, no secrets... For now!",
-    action: null,
-  },
-  {
     name: "cd",
     pattern: /^cd\s|^cd$/,
     message: "No such file or directory...",
@@ -164,12 +160,6 @@ You can't use sudo here! I'm the only superuser. Please <span class="command">co
     name: "pkill",
     pattern: /^pkill\s|^pkill$/,
     message: "No processes to kill here! Everything is running smoothly... Looks like you need better tactics!",
-      action: null,
-  },
-  {
-    name: "whoami",
-    pattern: /^whoami$/,
-    message: "You are in. Welcome to fsociety, anonymous!",
       action: null,
   },
   {
@@ -283,14 +273,22 @@ You can't use sudo here! I'm the only superuser. Please <span class="command">co
   {
       name: "python",
       pattern: /python.*?|python3.*?|pip.*?|pip3.*?/,
-      message: "Python? I love Python! But you can't run it here.",
+      message: `
+Python? I love Python and I'm a Python developer!
+Unfortunately, you can't run Python scripts here. 
+If you have any questions or interesting projects, feel free to <span class="command">contact</span> me.
+`,
       action: null,
 
   },
   {
       name: "go",
-      pattern: /go.*?|golang.*?/,
-      message: "You like Go? Me too! But you can't run it here.",
+      pattern: /^go.*?|^golang.*?/,
+      message: `
+You like Go? I like Go too! I've developed some projects in Golang.
+Unfortunately, you can't run Go scripts here.
+If you have any questions or interesting projects, feel free to <span class="command">contact</span> me.
+`,
       action: null,
   },
   {
@@ -344,15 +342,155 @@ export const secretCommands = {
       `Successfully switched to root user. Now you can use hidden commands:`,
       ``,
       `  <span class="command">sudo</span>        Gain root privileges`,
+      `  <span class="command">whois</span>       Show domain information`,
+      `  <span class="command">whoami</span>      Display user information`,
+      `  <span class="command">ls</span>          List files and directories:`,
+      `              Usage: ls [-l] [-a] [-la]`,
+      `  <span class="command">cat</span>         Display file content`,
+      `              Usage: cat [file]`,
+      `  <span class="command">download</span>    Download file`,
+      `              Usage: download [file]`,
       ``,
     ]
-  }
+  },
 }
+
+export const inputAllowedPatterns = [
+  {
+    name: "whois_juanallegretti",
+    pattern: /^whois$|^whois\sjuanallegretti$|^whois\sjuanallegretti.dev.ar$/,
+    message: `
+    domain:       juanallegretti.dev.ar
+    registrant:   Juan Allegretti
+    registrar:    nicar
+    registered:   1993-06-15
+    expire:       hopefully never
+
+    <span class="command">contact</span>:      juan.allegretti@outlook.com
+    name:         Juan Allegretti
+    `,
+    action: null,
+  },
+  {
+  name: "whoami",
+  pattern: /^whoami$/,
+  message: `
+  You are a guest user. Welcome! I'm Juan Allegretti, if you want to know more about me, type the command <span class="command">about</span>.
+  `,
+  action: null,
+  },
+  {
+    name: "ls",
+    pattern: /^ls$/,
+    message: `
+    cv.pdf
+    `,
+    action: null,
+  },
+  {
+    name: "lsl",
+    pattern: /^ls -l$/,
+    message: `
+    total 93
+    -rw-r--r-- 1 juanallegretti admin  703488 Feb  1 12:34 cv.pdf
+    `,
+    action: null,
+  },
+  {
+    name: "lsloa",
+    pattern: /^ls -la$/,
+    message: `
+    total 93
+    -drwxr-xr-x 1 juanallegretti admin  96 Feb  1 12:34 <span class="terminal-highlight">.</span>
+    -drwxr-xr-x 1 juanallegretti admin  2021088984 Feb  1 12:34 <span class="terminal-highlight">..</span>
+    -rw-r--r-- 1 juanallegretti admin  703488 Feb  1 12:34 cv.pdf
+    -rw-r--r-- 1 juanallegretti admin  1010544492 Feb  2 15:37 .hidden_secret.txt
+    `,
+    action: null,
+  },
+  {
+    name: "lsa",
+    pattern: /^ls -a$/,
+    message: `
+    <span class="terminal-highlight">.</span>  <span class="terminal-highlight">..</span>  cv.pdf  .hidden_secret.txt
+    `,
+    action: null,
+  },
+  {
+    name: "cat",
+    pattern: /^cat$|^cat $/,
+    message: `
+<span class="terminal-error">Missing file name...</span>
+Please specify the file you want to display.
+    `,
+    action: null,
+  },
+  {
+    name: "cathidden",
+    pattern: /^cat\s\.hidden_secret.txt$/,
+    message: `
+<span class="terminal-error">Permission denied...</span>
+    `,
+    action: "rickroll",
+  },
+  {
+    name: "catcv",
+    pattern: /^cat\scv.pdf$/,
+    message: `
+    %PDF-1.4
+    %âãÏÓ
+    1 0 obj
+    << /Type /Catalog /Pages 2 0 R >>
+    endobj
+    2 0 obj
+    << /Type /Page /Contents 3 0 R >>
+    endobj
+    3 0 obj
+    << /Length 152 >>
+    stream
+    (01010100 01111001 01110000 01100101) Tj
+    (00100000 01100100 01101111 01110111 01101110 01101100 01101111 01100001 01100100) Tj
+    (00100000 01100011 01110110 00101110 01110000 01100100 01100110) Tj
+    (00100000 01110100 01101111) Tj
+    (00100000 01100100 01101111 01110111 01101110 01101100 01101111 01100001 01100100) Tj
+    (00100000 01101101 01111001) Tj
+    (00100000 01000011 01010110 00101110) Tj
+    endstream
+    endobj
+    %%EOF
+    `,
+    action: null,
+  },
+  {
+    name: "download",
+    pattern: /^download$|^download $/,
+    message: `
+<span class="terminal-error">Missing file name...</span>
+Please specify the file you want to download.
+    `,
+    action: null,
+  },
+  {
+    name: "downloadhidden",
+    pattern: /^download\s\.hidden_secret.txt$/,
+    message: `
+<span class="terminal-error">Permission denied...</span>
+
+`,
+    action: "rickroll",
+  },
+  {
+    name: "downloadcv",
+    pattern: /^download\scv\.pdf$/,
+    message: `Downloading cv.pdf...`,
+    action: "downloadcv",
+  },
+    
+]
 
 
 export const printTextHiddenCommandsList = [...Object.keys(hiddenTextCommands)];
 
 export const printCommandsList = [...Object.keys(textCommands), "all"];
 
-export const functionCommandsList = ["clear", "gui", "su root"];
-
+export const functionCommandsList = ["clear", "gui", "su root", "exit", "rickroll"];

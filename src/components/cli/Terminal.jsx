@@ -21,11 +21,14 @@ import {
   isRedirectCommand,
   autocompleteCommand,
   isNotAllowedInput,
+  getAllowedInputAction,
+  getAllowedInputMessage,
   getNotAllowedInputAction,
   getNotAllowedInputMessage,
+  isAllowedInput,
 } from "../utils/commandUtils";
 
-import { rickRoll } from "../utils/miscUtils";
+import { rickRoll, closeTab, downloadCV } from "../utils/miscUtils";
 import { hashText } from "../utils/textUtils";
 import { textCommands, redirectCommands } from "../commands/Commands";
 import "./cli.css";
@@ -41,6 +44,8 @@ const Terminal = () => {
 
   const [isAwaitingPassword, setIsAwaitingPassword] = React.useState(false);
 
+  const [isRoot, setIsRoot] = React.useState(false);
+
   const [historyCommands, setHistoryCommands] = React.useState([]);
   const [historyCommandsPosition, setHistoryComandsPosition] =
     React.useState(0);
@@ -55,10 +60,12 @@ const Terminal = () => {
     banner: <Banner />,
     all: <AllCommands />,
     projects: <Projects />,
-    cli: <Cli />
+    cli: <Cli />,
+    whois: <About />,
   };
 
-  const secret = "0cb42a8d3bffd99356dacb0838465321548d0172a6b8113dcbbd471a94638d9f";
+  const secret =
+    "0cb42a8d3bffd99356dacb0838465321548d0172a6b8113dcbbd471a94638d9f"; // Congratuliations! You found the secret. Good luck reverse engineering the hash :)
 
   React.useEffect(() => {
     inputText.current.focus();
@@ -104,7 +111,7 @@ const Terminal = () => {
         <span className="terminal-prompt">
           {isAwaitingPassword ? <PasswordPrompt /> : <Prompt />}
         </span>
-        {!isAwaitingPassword ? value : ""} 
+        {!isAwaitingPassword ? value : ""}
       </div>
     );
 
@@ -123,12 +130,8 @@ const Terminal = () => {
     if (isAwaitingPassword) {
       if (e.key === "Enter") {
         e.preventDefault();
-        if ( hashText(value) === secret) {
-          setTerminalOutput([
-            ...terminalOutput,
-            commandRecord,
-            <SuRoot />,
-          ]);
+        if (hashText(value) === secret) {
+          setTerminalOutput([...terminalOutput, commandRecord, <SuRoot />]);
         } else {
           setTerminalOutput([
             ...terminalOutput,
@@ -137,6 +140,7 @@ const Terminal = () => {
           ]);
         }
         setIsAwaitingPassword(false);
+        setIsRoot(true);
         setInput("");
       }
       return;
@@ -186,7 +190,9 @@ const Terminal = () => {
                 setTerminalOutput([
                   ...terminalOutput,
                   commandRecord,
-                  <InputNotAllowed message={getNotAllowedInputMessage(value)} />,
+                  <InputNotAllowed
+                    message={getNotAllowedInputMessage(value)}
+                  />,
                 ]);
                 setTimeout(() => {
                   rickRoll();
@@ -201,6 +207,37 @@ const Terminal = () => {
                   />,
                 ]);
                 break;
+            }
+          } else if (isRoot && isAllowedInput(value)) {
+            switch (getAllowedInputAction(value)) {
+              case "rickroll":
+                setTerminalOutput([
+                  ...terminalOutput,
+                  commandRecord,
+                  <InputNotAllowed message={getAllowedInputMessage(value)} />,
+                ]);
+                setTimeout(() => {
+                  rickRoll();
+                }, 2000);
+                break;
+              case null:
+                setTerminalOutput([
+                  ...terminalOutput,
+                  commandRecord,
+                  <InputNotAllowedTypewriter
+                    message={getAllowedInputMessage(value)}
+                  />,
+                ]);
+                break;
+              case "downloadcv":
+                setTerminalOutput([
+                  ...terminalOutput,
+                  commandRecord,
+                  <InputNotAllowedTypewriter message={getAllowedInputMessage(value)} />,
+                ]);
+                setTimeout(() => {
+                  downloadCV();
+                }, 2000);
             }
           } else {
             setTerminalOutput([
@@ -236,12 +273,22 @@ const Terminal = () => {
                 window.location.href = "#/gui";
               }, 2000);
               break;
-            case "su root":
+            case "rickroll":
               setTerminalOutput([
                 ...terminalOutput,
                 commandRecord,
+                `Hope you enjoy the music!`,
               ]);
+              setTimeout(() => {
+                rickRoll();
+              }, 2000);
+              break;
+            case "su root":
+              setTerminalOutput([...terminalOutput, commandRecord]);
               setIsAwaitingPassword(true);
+              break;
+            case "exit":
+              closeTab();
               break;
           }
         }
@@ -261,7 +308,7 @@ const Terminal = () => {
         <WelcomeMsg />
         <MapConsoleOutput consoleOutput={terminalOutput} />
         <div className="terminal-input-area">
-        {isAwaitingPassword ? <PasswordPrompt /> : <Prompt />}
+          {isAwaitingPassword ? <PasswordPrompt /> : <Prompt />}
           <input
             type={isAwaitingPassword ? "password" : "text"} // Set to "password" when awaiting password
             ref={inputText}
