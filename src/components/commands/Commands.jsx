@@ -344,7 +344,7 @@ export const secretCommands = {
       `  <span class="command">sudo</span>        Gain root privileges`,
       `  <span class="command">whois</span>       Show domain information`,
       `  <span class="command">whoami</span>      Display user information`,
-      `  <span class="command">ls</span>          List files and directories:`,
+      `  <span class="command">ls</span>          List files and directories`,
       `              Usage: ls [-l] [-a] [-la]`,
       `  <span class="command">cat</span>         Display file content`,
       `              Usage: cat [file]`,
